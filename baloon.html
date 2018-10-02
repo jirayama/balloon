@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<title>balloon game</title>
+</head>
+<body>
+	<div id="game"></div>
+</body>
+</html>
+<script type="text/javascript">
+	// balloon stats game.
+ function Balloon() {
+ 	var state = {
+ 				round : 0,
+				question : 0,
+				players : [],
+				current_player: 0
+			};
+
+ 	var next_player = function() {
+ 		state.current_player  ++;
+ 		if(state.current_player >= state.players.length){
+ 			state.current_player = 0;
+ 		}
+ 	}
+
+
+ this.cur_player_score = function(){
+ 	return state.players[state.current_player].score;
+ }
+
+ var add_players = function(num){
+ 	for(var i = 0; i < num; i++){
+ 		state.players.push(new Player());
+ 	}
+
+ }
+
+ var clear_board = function(){
+ 	$("#game").html("");
+ }
+
+ this.players = function(){
+ 	return state.players;
+ }
+
+
+ 	function Player() {
+ 		this.score = 100;
+ 		this.name = '';
+ 		this.set_name = function (name){
+ 			this.name = name;
+ 		}
+ 		this.reset_score = function(){
+ 			this.score = 100;
+ 		}
+ 		this.minus = function(num){
+ 			this.score -= num;
+ 		}
+ 	}
+
+
+
+ 	function current_player() {
+ 		return state.players[state.current_player];
+ 	}
+
+ 	function setup_player() {
+ 		$("#game").html(`<input type="text" placeholder="name of player ${state.current_player + 1}?" id="player_name"/>`);
+ 		$("#player_name").focus();
+ 		$("#player_name").keypress(function(e){
+ 			if(e.which === 13){
+	 			current_player().set_name($("#player_name").val());
+	 			next_player();
+	 			if(state.current_player == 0){
+	 				clear_board();
+	 			} else {
+	 				setup_player();
+	 			}
+	 		}
+ 		});
+ 	}
+
+
+ 	function init(){
+ 		// how many players?
+ 		$("#game").html(`<input type="number" placeholder="How many players?" id="num_players"/>`);
+		$("#num_players").focus();
+		// handle num players submit
+		$("#num_players").keypress(function(e){
+			if(e.which === 13){
+				if($("#num_players").val()){
+					add_players($("#num_players").val());
+				} else {
+					add_players(2);
+				}
+				// clear game
+				clear_board();
+				setup_player();
+			}
+
+		});
+ 	}
+
+ init();
+ }
+
+ var x = new Balloon();
+
+
+</script>
